@@ -41,10 +41,6 @@ Este projeto faz parte da minha jornada de estudos em Desenvolvimento Front-End 
 2. Abra a pasta do projeto.
 3. Execute o arquivo `index.html` em seu navegador.
 
-## 📷 Demonstração
-
-> Adicione aqui uma captura de tela do projeto.
-
 ## 📂 Estrutura do projeto
 
 ```text
