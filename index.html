@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="controle.css">
+    <title>Controle de Despesas</title>
+</head>
+
+<body>
+
+    <body>
+
+        <div class="container">
+
+            <header>
+                <h1>💰 Controle de Despesas</h1>
+                <p class="subtitulo">
+                    Organize seus gastos, acompanhe estatísticas e mantenha suas finanças em dia.
+                </p>
+            </header>
+
+            <!-- Pesquisa -->
+            <section class="card">
+
+                <h2>🔍 Pesquisar</h2>
+
+                <input type="search" id="inPesquisar" placeholder="Digite uma descrição...">
+
+            </section>
+
+            <!-- Cadastro -->
+            <section class="card">
+
+                <h2>➕ Nova Despesa</h2>
+
+                <form>
+
+                    <div class="campo">
+                        <label for="inDescricao">Descrição</label>
+                        <input type="text" id="inDescricao" required autofocus>
+                    </div>
+
+                    <div class="campo">
+                        <label for="inValor">Valor</label>
+                        <input type="number" id="inValor" required step="0.01">
+                    </div>
+
+                    <div class="campo">
+                        <label for="inCategoria">Categoria</label>
+
+                        <select id="inCategoria">
+                            <option value="Alimentação">🍔 Alimentação</option>
+                            <option value="Transporte">🚗 Transporte</option>
+                            <option value="Lazer">🎮 Lazer</option>
+                            <option value="Saúde">🏥 Saúde</option>
+                            <option value="Outros">📦 Outros</option>
+                        </select>
+
+                    </div>
+
+                    <div class="acoes">
+
+                        <input type="submit" value="Adicionar">
+
+                        <input type="button" id="btCancelar" value="Cancelar" onclick="cancelar()">
+
+                    </div>
+
+                </form>
+
+            </section>
+
+            <!-- Filtro -->
+            <section class="card">
+
+                <h2>📂 Filtrar por Categoria</h2>
+
+                <select id="slFiltro">
+
+                    <option>Todos</option>
+                    <option>Alimentação</option>
+                    <option>Transporte</option>
+                    <option>Lazer</option>
+                    <option>Saúde</option>
+                    <option>Outros</option>
+
+                </select>
+
+            </section>
+
+            <!-- Lista -->
+            <section class="card">
+
+                <div class="titulo-card">
+
+                    <h2>🧾 Lista de Despesas</h2>
+
+                </div>
+
+                <div id="dvGastos"></div>
+
+            </section>
+
+            <!-- Estatísticas -->
+            <section class="card">
+
+                <div class="titulo-card">
+
+                    <h2>📊 Estatísticas</h2>
+
+                    <button id="btEstatisticas">
+                        Atualizar Estatísticas
+                    </button>
+
+                </div>
+
+                <div id="dvEstatisticas"></div>
+
+            </section>
+
+        </div>
+
+        <!-- TODO O SEU SCRIPT FICA AQUI, SEM ALTERAR -->
+
+    </body>
+
+    <script>
+        const frm = document.querySelector("form")
+        const dvGastos = document.querySelector("#dvGastos")
+        const btEstatisticas = document.querySelector("#btEstatisticas")
+        const dvEstatisticas = document.querySelector("#dvEstatisticas")
+        const btCancelar = document.querySelector("#btCancelar")
+        const slFiltro = document.querySelector("#slFiltro")
+        const pesquisar = document.querySelector("#inPesquisar")
+
+        const btSubmit = frm.querySelector("input[type='submit']")
+
+        let gastos = []
+        let indiceEdicao = -1
+
+        btCancelar.style.display = "none"
+
+        const dados = localStorage.getItem("gastos")
+
+        if (dados) {
+            gastos = JSON.parse(dados)
+            renderizar(gastos)
+        }
+
+        frm.addEventListener("submit", (e) => {
+            e.preventDefault()
+
+            const descricao = frm.inDescricao.value
+            const valor = Number(frm.inValor.value)
+            const categoria = frm.inCategoria.value
+
+            if (indiceEdicao === -1) {
+                gastos.push({
+                    descricao,
+                    valor,
+                    categoria
+                })
+            } else {
+                gastos[indiceEdicao] = {
+                    descricao,
+                    valor,
+                    categoria
+                }
+
+                indiceEdicao = -1
+                btSubmit.value = "Adicionar"
+                btCancelar.style.display = "none"
+            }
+
+
+            localStorage.setItem("gastos", JSON.stringify(gastos))
+
+            renderizar(gastos)
+            frm.reset()
+            frm.inDescricao.focus()
+        })
+
+        btEstatisticas.addEventListener("click", () => {
+
+            if (gastos.length === 0) {
+                alert("Não há gastos")
+                return
+            }
+
+            const total = gastos.length
+            const valorTotal = gastos.reduce((acc, gasto) => acc + gasto.valor, 0)
+            const media = gastos.reduce((acc, gasto) => acc + gasto.valor, 0) / gastos.length
+            const maiorDespesa = gastos.reduce((acc, gasto) => {
+                if (acc.valor < gasto.valor) {
+                    return gasto
+                }
+                return acc
+            })
+            const menorDespesa = gastos.reduce((acc, gasto) => {
+                if (acc.valor > gasto.valor) {
+                    return gasto
+                }
+                return acc
+            })
+
+            const categorias = gastos.reduce((acc, gasto) => {
+                if (acc[gasto.categoria]) {
+                    acc[gasto.categoria]++
+                } else {
+                    acc[gasto.categoria] = 1
+                }
+                return acc
+            }, {})
+
+            const listaCategorias = Object.entries(categorias)
+                .map(([categoria, quantidade]) =>
+                    `${categoria}: ${quantidade}`
+                )
+                .join("<br>")
+
+            const rankingDespesas = [...gastos].sort((a, b) => b.valor - a.valor)
+                .map((gastos, i) => `${i + 1}º - ${gastos.descricao} (${gastos.valor.toFixed(2)})`)
+                .join("<br>")
+
+            dvEstatisticas.innerHTML = `
+                Total de Compras - ${total} <br>
+                Valor Total - R$ ${valorTotal.toFixed(2)} <br>
+                Média de Gastos - R$ ${media.toFixed(2)} <br>
+                Maior Despesa - ${maiorDespesa.descricao} - R$ ${maiorDespesa.valor.toFixed(2)} <br>
+                Menor Despesa - ${menorDespesa.descricao} - R$ ${menorDespesa.valor.toFixed(2)} <br><br>
+                Categorias - ${listaCategorias} <br><br>
+                Ranking de Despesas: <br> ${rankingDespesas}
+                `
+
+
+        })
+
+        slFiltro.addEventListener("change", filtrar)
+
+        function renderizar(lista) {
+
+            let html = ""
+
+            for (let i = 0; i < lista.length; i++) {
+                html += `
+                <div class="gasto-card">
+
+                    <h3>${lista[i].descricao}</h3>
+
+                        <p>
+                            Categoria:
+                            <strong>${lista[i].categoria}</strong>
+                        </p>
+
+                        <p>
+                            Valor:
+                                            <strong>R$ ${lista[i].valor.toFixed(2)}</strong>
+                        </p>
+
+                        <div class="botoes">
+
+                        <button
+                            class="editar"
+                                           onclick="editar(${i})">
+                            Editar
+                        </button>
+
+                        <button
+                            class="remover"
+                        onclick="remover(${i})">
+                            Remover
+                        </button>
+
+                    </div>
+
+                </div>
+                `
+
+            }
+
+            dvGastos.innerHTML = html
+
+        }
+
+        pesquisar.addEventListener("input", () => {
+
+            buscar()
+            bloquearBotoes()
+
+            if (pesquisar.value === "") {
+                renderizar(gastos)
+                desbloquearBotoes()
+                return
+            }
+
+        })
+
+        function buscar() {
+            const pesquisa = pesquisar.value
+
+            const filtrados = gastos.filter((gasto) => gasto.descricao.toLowerCase().includes(pesquisa.toLowerCase()))
+
+            renderizar(filtrados)
+        }
+
+        function bloquearBotoes() {
+            document.querySelectorAll(".remover").forEach(botao => {
+                botao.disabled = true
+            })
+
+            document.querySelectorAll(".editar").forEach(botao => {
+                botao.disabled = true
+            })
+        }
+
+        function desbloquearBotoes() {
+            document.querySelectorAll(".remover").forEach(botao => {
+                botao.disabled = false
+            })
+
+            document.querySelectorAll(".editar").forEach(botao => {
+                botao.disabled = false
+            })
+        }
+
+        function filtrar() {
+            if (slFiltro.value == "Todos") {
+                renderizar(gastos)
+                return;
+            }
+
+            const filtrados = gastos.filter((gasto) => gasto.categoria === slFiltro.value)
+
+            renderizar(filtrados)
+        }
+
+        function remover(i) {
+
+            if (!confirm("Deseja excluir esta despesa?")) {
+                return
+            }
+
+            gastos = gastos.filter((_, index) => index !== i)
+
+            renderizar(gastos)
+
+            localStorage.setItem("gastos", JSON.stringify(gastos))
+        }
+
+
+        function editar(i) {
+
+            indiceEdicao = i
+
+            frm.inDescricao.value = gastos[i].descricao
+            frm.inValor.value = gastos[i].valor
+            frm.inCategoria.value = gastos[i].categoria
+
+            btSubmit.value = 'Salvar Alterações'
+
+            btCancelar.style.display = "inline-block"
+
+
+
+        }
+
+        function cancelar() {
+
+            if (!confirm("deseja realmente cancelar a edição")) {
+                return;
+            }
+
+
+
+            frm.reset()
+
+            indiceEdicao = -1
+
+            btSubmit.value = "Adicionar"
+            btCancelar.style.display = "none"
+            frm.inDescricao.focus()
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

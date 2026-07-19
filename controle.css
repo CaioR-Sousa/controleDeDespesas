@@ -1,0 +1,339 @@
+/* ===========================
+   RESET
+=========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===========================
+   BODY
+=========================== */
+
+body {
+    background: #eef2f7;
+    color: #333;
+    padding: 40px 20px;
+}
+
+/* ===========================
+   CONTAINER
+=========================== */
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+header h1 {
+    font-size: 2.6rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.subtitulo {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+/* ===========================
+   CARDS
+=========================== */
+
+.card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+}
+
+.card h2 {
+    margin-bottom: 20px;
+    color: #34495e;
+}
+
+/* ===========================
+   CAMPOS
+=========================== */
+
+.campo {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+input[type=text],
+input[type=number],
+input[type=search],
+select {
+
+    width: 100%;
+    padding: 12px;
+
+    border: 1px solid #dcdde1;
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    transition: .3s;
+}
+
+input:focus,
+select:focus {
+
+    outline: none;
+
+    border-color: #3498db;
+
+    box-shadow: 0 0 8px rgba(52, 152, 219, .25);
+
+}
+
+/* ===========================
+   BOTÕES
+=========================== */
+
+.acoes {
+    margin-top: 20px;
+}
+
+button,
+input[type=submit],
+input[type=button] {
+
+    border: none;
+    border-radius: 10px;
+
+    padding: 12px 18px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    transition: .25s;
+}
+
+input[type=submit] {
+
+    background: #3498db;
+    color: white;
+}
+
+input[type=submit]:hover {
+
+    background: #2980b9;
+}
+
+#btCancelar {
+
+    background: #e74c3c;
+    color: white;
+}
+
+#btCancelar:hover {
+
+    background: #c0392b;
+}
+
+#btEstatisticas {
+
+    background: #16a085;
+    color: white;
+}
+
+#btEstatisticas:hover {
+
+    background: #13856d;
+}
+
+.remover {
+
+    background: #e74c3c;
+    color: white;
+}
+
+.remover:hover {
+
+    background: #c0392b;
+}
+
+.editar {
+
+    background: #f39c12;
+    color: white;
+}
+
+.editar:hover {
+
+    background: #d68910;
+}
+
+button:disabled {
+
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* ===========================
+   LISTA
+=========================== */
+
+ul {
+    list-style: none;
+}
+
+li {
+
+    background: #f8fafc;
+
+    border-left: 6px solid #3498db;
+
+    border-radius: 12px;
+
+    padding: 16px;
+
+    margin-bottom: 15px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    transition: .25s;
+}
+
+li:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .08);
+}
+
+li button {
+
+    margin-left: 8px;
+}
+
+/* ===========================
+   ESTATÍSTICAS
+=========================== */
+
+#dvEstatisticas {
+
+    margin-top: 20px;
+
+    line-height: 2;
+
+    font-size: 16px;
+}
+
+/* ===========================
+   TÍTULO DOS CARDS
+=========================== */
+
+.titulo-card {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.gasto-card {
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+
+}
+
+.gasto-card h3{
+
+    color:#2c3e50;
+
+    margin-bottom:15px;
+}
+
+.gasto-card p{
+
+    margin-bottom:8px;
+
+    color:#555;
+}
+
+.botoes{
+
+    margin-top:20px;
+
+    display:flex;
+
+    gap:10px;
+}
+
+/* ===========================
+   RESPONSIVO
+=========================== */
+
+@media(max-width:700px) {
+
+    body {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    li {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    li button {
+
+        margin-top: 10px;
+    }
+
+    .titulo-card {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+}
+
